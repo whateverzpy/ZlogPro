@@ -5,21 +5,37 @@ import Layout from '../../layouts/Layout.astro';
 const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+
+const formatDate = (date: Date) =>
+	date.toLocaleDateString('zh-CN', {
+		year: 'numeric',
+		month: 'long',
+		day: 'numeric',
+	});
 ---
 
-<Layout title="Blog | ZlogPro" description="ZlogPro blog posts">
+<Layout title="Blog | ZlogPro" description="ZlogPro 的博客文章">
 	<section class="page-section article-header">
 		<p class="page-kicker">Blog</p>
-		<h1 class="page-heading">文章列表</h1>
-		<p class="page-description">当前收录 {posts.length} 篇文章。</p>
+		<h1 class="page-heading">文章</h1>
+		<p class="page-description">
+			按时间整理的博客文章，记录项目过程、技术试验和阶段性思考。
+		</p>
 	</section>
 
-	<section class="entry-grid" aria-label="文章列表">
+	<section class="entry-list" aria-label="文章列表">
 		{posts.map((post) => (
-			<a class="entry-card" href={`/blog/${post.id}/`}>
-				<span class="entry-meta">{post.data.pubDate.toLocaleDateString('zh-CN')}</span>
-				<strong class="entry-title">{post.data.title}</strong>
-				<small class="entry-summary">{post.data.description}</small>
+			<a class="entry-row" href={`/blog/${post.id}/`}>
+				<span class="entry-row-date">{formatDate(post.data.pubDate)}</span>
+				<span class="entry-row-body">
+					<strong class="entry-title">{post.data.title}</strong>
+					<small class="entry-summary">{post.data.description}</small>
+					{post.data.tags.length > 0 && (
+						<span class="inline-tag-list" aria-label="标签">
+							{post.data.tags.map((tag) => <span>{tag}</span>)}
+						</span>
+					)}
+				</span>
 			</a>
 		))}
 	</section>

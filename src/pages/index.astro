@@ -1,30 +1,73 @@
 ---
+import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
+
+const blogPosts = (await getCollection('blog', ({ data }) => !data.draft))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 3);
+
+const docs = (await getCollection('docs', ({ data }) => !data.draft))
+	.sort((a, b) => a.id.localeCompare(b.id))
+	.slice(0, 3);
+
+const formatDate = (date: Date) =>
+	date.toLocaleDateString('zh-CN', {
+		year: 'numeric',
+		month: 'long',
+		day: 'numeric',
+	});
 ---
 
-<Layout title="ZlogPro | 内容测试" description="ZlogPro blog 和 docs 渲染测试入口">
+<Layout title="ZlogPro" description="ZlogPro 的博客文章与项目文档">
 	<section class="hero-section">
-		<p class="page-kicker">Astro content rendering</p>
-		<h1 class="hero-heading">ZlogPro 内容渲染测试</h1>
+		<p class="page-kicker">Blog / Docs</p>
+		<h1 class="hero-heading">记录想法、项目与学习笔记</h1>
 		<p class="page-description">
-			已接入 Astro 内容集合，先用现有的 Markdown 与 MDX test 文件验证 blog 和 docs 页面。
+			Blog 用来沉淀阶段性的观察和文章，Docs 用来整理更稳定的说明、教程与参考材料。
 		</p>
 		<div class="button-row">
-			<a class="button button-primary" href="/blog/test/">查看 Blog test</a>
-			<a class="button button-secondary" href="/docs/test/">查看 Docs test</a>
+			<a class="button button-primary" href="/blog/">阅读 Blog</a>
+			<a class="button button-secondary" href="/docs/">查看 Docs</a>
 		</div>
 	</section>
 
-	<section class="entry-grid two-column" aria-label="内容入口">
-		<a class="entry-card" href="/blog/">
-			<span class="entry-meta">Blog</span>
-			<strong class="entry-title">Markdown 文章列表</strong>
-			<small class="entry-summary">验证 frontmatter、GFM、代码块、表格、脚注等基础渲染。</small>
-		</a>
-		<a class="entry-card" href="/docs/">
-			<span class="entry-meta">Docs</span>
-			<strong class="entry-title">MDX 文档列表</strong>
-			<small class="entry-summary">验证 JSX 表达式、组件导入、Astro 组件插槽和混写能力。</small>
-		</a>
+	<section class="category-grid" aria-label="内容分类">
+		<section class="category-panel">
+			<div class="section-heading-row">
+				<div>
+					<p class="page-kicker">Blog</p>
+					<h2 class="section-heading">最新文章</h2>
+				</div>
+				<a class="text-link" href="/blog/">全部文章</a>
+			</div>
+			<div class="compact-entry-list">
+				{blogPosts.map((post) => (
+					<a class="compact-entry" href={`/blog/${post.id}/`}>
+						<span class="entry-meta">{formatDate(post.data.pubDate)}</span>
+						<strong class="entry-title">{post.data.title}</strong>
+						<small class="entry-summary">{post.data.description}</small>
+					</a>
+				))}
+			</div>
+		</section>
+
+		<section class="category-panel">
+			<div class="section-heading-row">
+				<div>
+					<p class="page-kicker">Docs</p>
+					<h2 class="section-heading">文档入口</h2>
+				</div>
+				<a class="text-link" href="/docs/">全部文档</a>
+			</div>
+			<div class="compact-entry-list">
+				{docs.map((doc) => (
+					<a class="compact-entry" href={`/docs/${doc.id}/`}>
+						<span class="entry-meta">{doc.id}</span>
+						<strong class="entry-title">{doc.data.title}</strong>
+						<small class="entry-summary">{doc.data.description}</small>
+					</a>
+				))}
+			</div>
+		</section>
 	</section>
 </Layout>

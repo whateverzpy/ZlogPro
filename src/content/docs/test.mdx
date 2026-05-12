@@ -3,7 +3,7 @@ title: "MDX 功能测试"
 description: "用于测试 Astro 中 MDX、JSX、组件、变量和 Markdown 混写"
 pubDate: 2026-05-12
 updatedDate: 2026-05-12
-author: "朱培懿"
+author: "Leo Zhu"
 tags:
   - Astro
   - MDX
@@ -30,7 +30,7 @@ export const metadata = {
 
 ## 1. 普通 Markdown
 
-**粗体**、*斜体*、~~删除线~~、`行内代码`。
+**粗体**、_斜体_、~~删除线~~、`行内代码`。
 
 - 列表项 A
 - 列表项 B
@@ -70,6 +70,7 @@ export const metadata = {
 ## 4. 数组渲染
 
 {["Markdown", "MDX", "Astro"].map((item) => (
+
   <span style={{ marginRight: "0.75rem" }} key={item}>
     #{item}
   </span>
@@ -86,13 +87,9 @@ src/components/Alert.astro
 src/components/Card.astro
 ```
 
-<Alert type="info">
-  这是从 MDX 中调用的 Astro 组件。
-</Alert>
+<Alert type="info">这是从 MDX 中调用的 Astro 组件。</Alert>
 
-<Card title="MDX Card">
-  这是传给组件 slot 的内容。
-</Card>
+<Card title="MDX Card">这是传给组件 slot 的内容。</Card>
 
 ---
 
@@ -101,10 +98,11 @@ src/components/Card.astro
 <Card title="Markdown inside component">
   ## 组件内部标题
 
-  - 组件内部列表 A
-  - 组件内部列表 B
+- 组件内部列表 A
+- 组件内部列表 B
 
-  `组件内部代码`
+`组件内部代码`
+
 </Card>
 
 ---
@@ -133,13 +131,13 @@ const title = "Astro Component";
 
 ## 8. 表格
 
-| 能力 | Markdown | MDX |
-|---|---:|---:|
-| 普通文章 | ✅ | ✅ |
-| JSX 表达式 | ❌ | ✅ |
-| 导入组件 | ❌ | ✅ |
-| 导出变量 | ❌ | ✅ |
-| 复杂交互 | ❌ | ✅ |
+| 能力       | Markdown | MDX |
+| ---------- | -------: | --: |
+| 普通文章   |       ✅ |  ✅ |
+| JSX 表达式 |       ❌ |  ✅ |
+| 导入组件   |       ❌ |  ✅ |
+| 导出变量   |       ❌ |  ✅ |
+| 复杂交互   |       ❌ |  ✅ |
 
 ---
 
@@ -148,7 +146,7 @@ const title = "Astro Component";
 <details>
   <summary>点击展开 MDX details</summary>
 
-  这里是 details 内容。
+这里是 details 内容。
 
 </details>
 

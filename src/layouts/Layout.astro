@@ -82,6 +82,62 @@ const {
 				}
 				setToggleState(nextTheme);
 			});
+
+			const restartClassAnimation = (element, className) => {
+				if (!element) return;
+				element.classList.remove(className);
+				void element.offsetWidth;
+				element.classList.add(className);
+			};
+
+			const getHashTarget = (hash) => {
+				if (!hash || hash === '#') return null;
+				const rawId = hash.slice(1);
+				try {
+					return document.getElementById(decodeURIComponent(rawId)) ?? document.getElementById(rawId);
+				} catch {
+					return document.getElementById(rawId);
+				}
+			};
+
+			const highlightTarget = (target) => {
+				if (!target) return;
+				const context = target.closest('.prose-content :is(p, li, blockquote, td, th)');
+				restartClassAnimation(context, 'is-target-context-highlight');
+				restartClassAnimation(target, 'is-target-highlight');
+			};
+
+			document.addEventListener('click', (event) => {
+				const link = event.target instanceof Element ? event.target.closest('a[href]') : null;
+				if (!link) return;
+
+				const targetUrl = new URL(link.href, window.location.href);
+				if (
+					targetUrl.origin !== window.location.origin ||
+					targetUrl.pathname !== window.location.pathname ||
+					targetUrl.search !== window.location.search ||
+					!targetUrl.hash
+				) {
+					return;
+				}
+
+				const target = getHashTarget(targetUrl.hash);
+				if (!target) return;
+
+				event.preventDefault();
+				if (window.location.hash !== targetUrl.hash) {
+					window.history.pushState(null, '', targetUrl.hash);
+				} else {
+					window.history.replaceState(null, '', targetUrl.hash);
+				}
+
+				target.scrollIntoView({ block: 'start' });
+				highlightTarget(target);
+			});
+
+			window.addEventListener('hashchange', () => {
+				highlightTarget(getHashTarget(window.location.hash));
+			});
 		</script>
 	</body>
 </html>

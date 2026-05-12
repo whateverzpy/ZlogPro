@@ -3,7 +3,7 @@ title: "Markdown 功能测试"
 description: "用于测试 Astro 中 Markdown / GFM / frontmatter 的渲染效果"
 pubDate: 2026-05-12
 updatedDate: 2026-05-12
-author: "朱培懿"
+author: "Leo Zhu"
 tags:
   - Astro
   - Markdown
