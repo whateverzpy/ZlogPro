@@ -1,0 +1,29 @@
+@layer components {
+	.prose-content .custom-html-block,
+	.prose-content .rounded-xl.border {
+		@apply rounded-lg border p-4;
+		background: var(--site-muted);
+		border-color: var(--site-border);
+	}
+
+	.callout {
+		@apply my-6 rounded-lg border p-4 text-sm leading-6;
+		background: var(--site-muted);
+		border-color: var(--site-border);
+		color: var(--site-text);
+	}
+
+	.callout.success {
+		background: var(--site-success-bg);
+		border-color: var(--site-success-border);
+	}
+
+	.callout.warning {
+		background: var(--site-warning-bg);
+		border-color: var(--site-warning-border);
+	}
+
+	.not-prose {
+		@apply my-6;
+	}
+}

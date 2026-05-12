@@ -1,0 +1,36 @@
+@layer base {
+	html {
+		background: var(--site-bg);
+		font-family: var(--font-sans);
+		scroll-padding-top: 5.5rem;
+		scrollbar-gutter: stable;
+		text-rendering: optimizeLegibility;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	body {
+		@apply m-0 min-h-screen;
+		background: var(--site-bg);
+		color: var(--site-text);
+	}
+
+	::selection {
+		background: var(--site-selection-bg);
+		color: var(--site-text);
+	}
+
+	a {
+		color: inherit;
+		text-decoration-thickness: 1px;
+		text-underline-offset: 0.18em;
+	}
+
+	img {
+		@apply max-w-full;
+	}
+
+	:focus-visible {
+		@apply outline-2 outline-offset-2;
+		outline-color: var(--site-focus);
+	}
+}

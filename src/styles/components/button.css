@@ -1,0 +1,30 @@
+@layer components {
+	.button-row {
+		@apply mt-8 flex flex-wrap gap-3;
+	}
+
+	.button {
+		@apply inline-flex h-10 items-center justify-center rounded-md border px-4 text-sm font-medium no-underline transition-colors;
+	}
+
+	.button-primary {
+		@apply border-transparent;
+		background: var(--site-text);
+		color: var(--site-bg);
+	}
+
+	.button-primary:hover {
+		background: var(--site-primary-hover);
+	}
+
+	.button-secondary {
+		background: var(--site-surface);
+		border-color: var(--site-border);
+		color: var(--site-text);
+	}
+
+	.button-secondary:hover {
+		background: var(--site-muted);
+		border-color: var(--site-border-strong);
+	}
+}

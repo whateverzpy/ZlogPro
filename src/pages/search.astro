@@ -1,0 +1,206 @@
+---
+import { Search } from '@lucide/astro';
+import Layout from '../layouts/Layout.astro';
+
+const categories = [
+	{ key: 'Blog', label: 'Blog', pathPrefix: '/blog/' },
+	{ key: 'Docs', label: 'Docs', pathPrefix: '/docs/' },
+];
+---
+
+<Layout title="搜索 | ZlogPro" description="搜索 ZlogPro 的博客文章与项目文档">
+	<section class="page-section article-header" data-pagefind-ignore="all">
+		<p class="page-kicker">Search</p>
+		<div class="search-heading-row">
+			<Search size={28} stroke-width={1.7} aria-hidden="true" />
+			<h1 class="page-heading">全站搜索</h1>
+		</div>
+		<p class="page-description">
+			输入关键词检索已发布的 Blog 与 Docs 内容，包括正文、标题、摘要、标签、作者和日期。
+		</p>
+	</section>
+
+	<section class="search-panel" aria-label="全站搜索" data-pagefind-ignore="all">
+		<div class="search-form">
+			<Search class="search-form-icon" size={18} stroke-width={1.8} aria-hidden="true" />
+			<label class="sr-only" for="site-search">全站搜索</label>
+			<input
+				id="site-search"
+				class="search-input"
+				type="search"
+				name="q"
+				placeholder="搜索文章、文档、作者或日期..."
+				autocomplete="off"
+				autofocus
+			/>
+		</div>
+		<p class="search-summary" data-search-summary>输入时将显示搜索结果。</p>
+		<div class="search-results" data-search-results></div>
+	</section>
+
+	<script define:vars={{ categories }} type="module">
+		const categoryConfig = new Map(
+			categories.map((category, index) => [
+				category.key,
+				{
+					...category,
+					order: index,
+				},
+			]),
+		);
+
+		const input = document.querySelector('[name="q"]');
+		const summary = document.querySelector('[data-search-summary]');
+		const resultsRoot = document.querySelector('[data-search-results]');
+		const url = new URL(window.location.href);
+		let pagefind;
+		let lastSearchId = 0;
+
+		const setSummary = (message) => {
+			if (summary) summary.textContent = message;
+		};
+
+		const clearResults = () => {
+			if (resultsRoot) resultsRoot.textContent = '';
+		};
+
+		const getCategory = (data) => {
+			const category = data.meta?.category;
+			if (category) return category;
+
+			const matched = categories.find((item) => data.url.startsWith(item.pathPrefix));
+			return matched?.key ?? 'Other';
+		};
+
+		const getCategoryLabel = (key) => categoryConfig.get(key)?.label ?? key;
+
+		const getCategoryOrder = (key) => categoryConfig.get(key)?.order ?? categories.length;
+
+		const getResultMeta = (meta) => {
+			return [meta.published, meta.updated, meta.author, meta.tags].filter(Boolean).join(' / ');
+		};
+
+		const createResultItem = (data) => {
+			const item = document.createElement('article');
+			item.className = 'search-result-item';
+
+			const title = document.createElement('a');
+			title.className = 'search-result-title';
+			title.href = data.url;
+			title.textContent = data.meta?.title || data.title || data.url;
+			item.append(title);
+
+			const metaText = getResultMeta(data.meta ?? {});
+			if (metaText) {
+				const meta = document.createElement('p');
+				meta.className = 'search-result-meta';
+				meta.textContent = metaText;
+				item.append(meta);
+			}
+
+			if (data.excerpt) {
+				const excerpt = document.createElement('p');
+				excerpt.className = 'search-result-excerpt';
+				excerpt.innerHTML = data.excerpt;
+				item.append(excerpt);
+			}
+
+			return item;
+		};
+
+		const renderResults = (query, loadedResults) => {
+			clearResults();
+
+			if (!query) {
+				setSummary('输入时将显示搜索结果。');
+				return;
+			}
+
+			if (loadedResults.length === 0) {
+				setSummary(`没有找到与“${query}”相关的结果。`);
+				return;
+			}
+
+			setSummary(`找到 ${loadedResults.length} 个与“${query}”相关的结果。`);
+
+			const grouped = loadedResults.reduce((groups, data) => {
+				const category = getCategory(data);
+				if (!groups.has(category)) groups.set(category, []);
+				groups.get(category).push(data);
+				return groups;
+			}, new Map());
+
+			const orderedGroups = [...grouped.entries()].sort(
+				([left], [right]) => getCategoryOrder(left) - getCategoryOrder(right) || left.localeCompare(right),
+			);
+
+			for (const [category, items] of orderedGroups) {
+				const section = document.createElement('section');
+				section.className = 'search-result-group';
+
+				const heading = document.createElement('h2');
+				heading.className = 'search-result-group-title';
+				heading.textContent = `${getCategoryLabel(category)} (${items.length})`;
+				section.append(heading);
+
+				const list = document.createElement('div');
+				list.className = 'search-result-list';
+				for (const data of items) {
+					list.append(createResultItem(data));
+				}
+				section.append(list);
+				resultsRoot?.append(section);
+			}
+		};
+
+		const ensurePagefind = async () => {
+			if (!pagefind) {
+				pagefind = await import('/pagefind/pagefind.js');
+				await pagefind.options({
+					excerptLength: 36,
+				});
+			}
+			return pagefind;
+		};
+
+		const runSearch = async () => {
+			const query = input?.value.trim() ?? '';
+			const searchId = ++lastSearchId;
+			url.searchParams.delete('q');
+			if (query) url.searchParams.set('q', query);
+			window.history.replaceState(null, '', url);
+
+			if (!query) {
+				renderResults('', []);
+				return;
+			}
+
+			setSummary(`正在搜索“${query}”...`);
+			clearResults();
+
+			try {
+				const search = await ensurePagefind();
+				const result = await search.search(query);
+				const loadedResults = await Promise.all(result.results.map((item) => item.data()));
+				if (searchId !== lastSearchId) return;
+				renderResults(query, loadedResults);
+			} catch {
+				setSummary('搜索索引尚未生成。请先运行项目构建命令。');
+			}
+		};
+
+		const debounce = (callback, delay = 160) => {
+			let timer;
+			return () => {
+				window.clearTimeout(timer);
+				timer = window.setTimeout(callback, delay);
+			};
+		};
+
+		if (input) {
+			input.value = url.searchParams.get('q') ?? '';
+			input.addEventListener('input', debounce(runSearch));
+			runSearch();
+		}
+	</script>
+</Layout>

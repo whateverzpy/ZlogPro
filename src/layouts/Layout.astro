@@ -1,4 +1,5 @@
 ---
+import { Search } from '@lucide/astro';
 import ThemeToggle from '../components/ThemeToggle.astro';
 import '../styles/global.css'
 import 'katex/dist/katex.min.css'
@@ -24,6 +25,7 @@ const {
 		<meta name="description" content={description} />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+		<slot name="head" />
 		<script is:inline>
 			(() => {
 				const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
@@ -49,6 +51,9 @@ const {
 						<a class="site-nav-link" href="/blog/">Blog</a>
 						<a class="site-nav-link" href="/docs/">Docs</a>
 					</div>
+					<a class="site-icon-link" href="/search/" aria-label="全站搜索" title="全站搜索">
+						<Search size={17} stroke-width={1.8} aria-hidden="true" />
+					</a>
 					<ThemeToggle />
 				</div>
 			</nav>

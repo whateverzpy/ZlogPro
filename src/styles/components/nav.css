@@ -1,0 +1,73 @@
+@layer components {
+	.site-header {
+		@apply sticky top-0 z-50 border-b;
+		background: var(--site-bg);
+		border-color: var(--site-border);
+	}
+
+	.site-nav {
+		@apply flex h-16 items-center justify-between gap-6;
+	}
+
+	.site-logo {
+		@apply text-[0.95rem] font-semibold tracking-normal no-underline;
+		color: var(--site-text);
+	}
+
+	.site-nav-links {
+		@apply flex items-center gap-1;
+	}
+
+	.site-nav-actions {
+		@apply flex items-center gap-2;
+	}
+
+	.site-nav-link {
+		@apply rounded-md px-3 py-2 text-sm no-underline transition-colors;
+		color: var(--site-text-muted);
+	}
+
+	.site-nav-link:hover {
+		background: var(--site-muted);
+		color: var(--site-text);
+	}
+
+	.site-icon-link {
+		@apply inline-flex h-9 w-9 items-center justify-center rounded-md border no-underline transition-colors;
+		background: var(--site-surface);
+		border-color: var(--site-border);
+		color: var(--site-text-muted);
+	}
+
+	.site-icon-link:hover {
+		background: var(--site-muted);
+		border-color: var(--site-border-strong);
+		color: var(--site-text);
+	}
+
+	.theme-toggle {
+		@apply inline-flex h-9 w-9 items-center justify-center rounded-md border transition-colors;
+		background: var(--site-surface);
+		border-color: var(--site-border);
+		color: var(--site-text-muted);
+	}
+
+	.theme-toggle:hover {
+		background: var(--site-muted);
+		border-color: var(--site-border-strong);
+		color: var(--site-text);
+	}
+
+	.theme-toggle-icon {
+		@apply block;
+	}
+
+	.theme-toggle-icon-sun,
+	:root[data-theme="dark"] .theme-toggle-icon-moon {
+		@apply hidden;
+	}
+
+	:root[data-theme="dark"] .theme-toggle-icon-sun {
+		@apply block;
+	}
+}
