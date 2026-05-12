@@ -1,0 +1,26 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<Layout title="Blog | ZlogPro" description="ZlogPro blog posts">
+	<section class="page-section article-header">
+		<p class="page-kicker">Blog</p>
+		<h1 class="page-heading">文章列表</h1>
+		<p class="page-description">当前收录 {posts.length} 篇文章。</p>
+	</section>
+
+	<section class="entry-grid" aria-label="文章列表">
+		{posts.map((post) => (
+			<a class="entry-card" href={`/blog/${post.id}/`}>
+				<span class="entry-meta">{post.data.pubDate.toLocaleDateString('zh-CN')}</span>
+				<strong class="entry-title">{post.data.title}</strong>
+				<small class="entry-summary">{post.data.description}</small>
+			</a>
+		))}
+	</section>
+</Layout>

@@ -1,23 +1,87 @@
+---
+import ThemeToggle from '../components/ThemeToggle.astro';
+import '../styles/global.css'
+import 'katex/dist/katex.min.css'
+
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const {
+	title = 'ZlogPro',
+	description = 'A personal blog and docs site built with Astro.',
+} = Astro.props;
+---
+
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
+		<meta name="description" content={description} />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<title>{title}</title>
+		<script is:inline>
+			(() => {
+				const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+				let storedTheme;
+
+				try {
+					storedTheme = localStorage.getItem('zlogpro-theme');
+				} catch {
+					storedTheme = null;
+				}
+
+				document.documentElement.dataset.theme =
+					storedTheme === 'dark' || storedTheme === 'light' ? storedTheme : systemTheme;
+			})();
+		</script>
 	</head>
 	<body>
-		<slot />
+		<header class="site-header">
+			<nav class="page-container site-nav" aria-label="主导航">
+				<a class="site-logo" href="/">ZlogPro</a>
+				<div class="site-nav-actions">
+					<div class="site-nav-links">
+						<a class="site-nav-link" href="/blog/">Blog</a>
+						<a class="site-nav-link" href="/docs/">Docs</a>
+					</div>
+					<ThemeToggle />
+				</div>
+			</nav>
+		</header>
+		<main class="page-container site-main">
+			<slot />
+		</main>
+		<script is:inline>
+			const storageKey = 'zlogpro-theme';
+			const root = document.documentElement;
+			const toggle = document.querySelector('[data-theme-toggle]');
+
+			const setToggleState = (theme) => {
+				if (!toggle) return;
+				const isDark = theme === 'dark';
+				const label = isDark ? '切换到浅色模式' : '切换到暗色模式';
+				toggle.setAttribute('aria-label', label);
+				toggle.setAttribute('title', label);
+				toggle.setAttribute('aria-pressed', String(isDark));
+			};
+
+			setToggleState(root.dataset.theme);
+
+			toggle?.addEventListener('click', () => {
+				const nextTheme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+				root.dataset.theme = nextTheme;
+				try {
+					localStorage.setItem(storageKey, nextTheme);
+				} catch {
+					// Theme still changes for the current page when storage is unavailable.
+				}
+				setToggleState(nextTheme);
+			});
+		</script>
 	</body>
 </html>
-
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>

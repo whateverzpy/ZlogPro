@@ -1,0 +1,26 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+const docs = (await getCollection('docs', ({ data }) => !data.draft)).sort((a, b) =>
+	a.id.localeCompare(b.id),
+);
+---
+
+<Layout title="Docs | ZlogPro" description="ZlogPro docs">
+	<section class="page-section article-header">
+		<p class="page-kicker">Docs</p>
+		<h1 class="page-heading">文档列表</h1>
+		<p class="page-description">当前收录 {docs.length} 篇文档。</p>
+	</section>
+
+	<section class="entry-grid" aria-label="文档列表">
+		{docs.map((doc) => (
+			<a class="entry-card" href={`/docs/${doc.id}/`}>
+				<span class="entry-meta">{doc.id}</span>
+				<strong class="entry-title">{doc.data.title}</strong>
+				<small class="entry-summary">{doc.data.description}</small>
+			</a>
+		))}
+	</section>
+</Layout>

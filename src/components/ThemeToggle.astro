@@ -1,0 +1,14 @@
+---
+import { Moon, Sun } from '@lucide/astro';
+---
+
+<button
+	class="theme-toggle"
+	type="button"
+	aria-label="切换到暗色模式"
+	title="切换到暗色模式"
+	data-theme-toggle
+>
+	<Moon class="theme-toggle-icon theme-toggle-icon-moon" size={17} stroke-width={1.8} aria-hidden="true" />
+	<Sun class="theme-toggle-icon theme-toggle-icon-sun" size={17} stroke-width={1.8} aria-hidden="true" />
+</button>

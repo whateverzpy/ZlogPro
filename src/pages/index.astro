@@ -1,11 +1,30 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="ZlogPro | 内容测试" description="ZlogPro blog 和 docs 渲染测试入口">
+	<section class="hero-section">
+		<p class="page-kicker">Astro content rendering</p>
+		<h1 class="hero-heading">ZlogPro 内容渲染测试</h1>
+		<p class="page-description">
+			已接入 Astro 内容集合，先用现有的 Markdown 与 MDX test 文件验证 blog 和 docs 页面。
+		</p>
+		<div class="button-row">
+			<a class="button button-primary" href="/blog/test/">查看 Blog test</a>
+			<a class="button button-secondary" href="/docs/test/">查看 Docs test</a>
+		</div>
+	</section>
+
+	<section class="entry-grid two-column" aria-label="内容入口">
+		<a class="entry-card" href="/blog/">
+			<span class="entry-meta">Blog</span>
+			<strong class="entry-title">Markdown 文章列表</strong>
+			<small class="entry-summary">验证 frontmatter、GFM、代码块、表格、脚注等基础渲染。</small>
+		</a>
+		<a class="entry-card" href="/docs/">
+			<span class="entry-meta">Docs</span>
+			<strong class="entry-title">MDX 文档列表</strong>
+			<small class="entry-summary">验证 JSX 表达式、组件导入、Astro 组件插槽和混写能力。</small>
+		</a>
+	</section>
 </Layout>
