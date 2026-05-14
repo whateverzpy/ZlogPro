@@ -10,6 +10,7 @@ tags:
   - Tailwind
   - Hugo
 draft: false
+heroImage: "./HeroImage.png"
 ---
 
 我把博客从 Hugo 迁到了 Astro，并用 Tailwind 重新整理了界面。

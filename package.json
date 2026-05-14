@@ -1,5 +1,5 @@
 {
-  "name": "",
+  "name": "zlog-pro",
   "type": "module",
   "version": "0.0.1",
   "engines": {
@@ -19,9 +19,11 @@
     "katex": "^0.16.45",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0",
+    "shiki": "^4.0.2",
     "tailwindcss": "^4.3.0"
   },
   "devDependencies": {
-    "pagefind": "^1.5.2"
+    "pagefind": "^1.5.2",
+    "vite": "^7.3.3"
   }
 }

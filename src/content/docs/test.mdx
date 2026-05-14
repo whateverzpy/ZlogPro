@@ -70,7 +70,6 @@ export const metadata = {
 ## 4. 数组渲染
 
 {["Markdown", "MDX", "Astro"].map((item) => (
-
   <span style={{ marginRight: "0.75rem" }} key={item}>
     #{item}
   </span>
@@ -96,7 +95,7 @@ src/components/Card.astro
 ## 6. Markdown 与 JSX 混合
 
 <Card title="Markdown inside component">
-  ## 组件内部标题
+## 组件内部标题
 
 - 组件内部列表 A
 - 组件内部列表 B
@@ -132,7 +131,7 @@ const title = "Astro Component";
 ## 8. 表格
 
 | 能力       | Markdown | MDX |
-| ---------- | -------: | --: |
+| :--------- | :------: | --: |
 | 普通文章   |       ✅ |  ✅ |
 | JSX 表达式 |       ❌ |  ✅ |
 | 导入组件   |       ❌ |  ✅ |

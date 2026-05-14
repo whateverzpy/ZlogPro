@@ -1,5 +1,6 @@
 ---
 import { Search } from '@lucide/astro';
+import CodeBlockEnhancer from '../components/CodeBlockEnhancer.astro';
 import ThemeToggle from '../components/ThemeToggle.astro';
 import '../styles/global.css'
 import 'katex/dist/katex.min.css'
@@ -28,17 +29,24 @@ const {
 		<slot name="head" />
 		<script is:inline>
 			(() => {
-				const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+				const storageKey = 'zlogpro-theme';
+				const validModes = ['light', 'dark', 'system'];
 				let storedTheme;
 
 				try {
-					storedTheme = localStorage.getItem('zlogpro-theme');
+					storedTheme = localStorage.getItem(storageKey);
 				} catch {
 					storedTheme = null;
 				}
 
-				document.documentElement.dataset.theme =
-					storedTheme === 'dark' || storedTheme === 'light' ? storedTheme : systemTheme;
+				const themeMode = validModes.includes(storedTheme) ? storedTheme : 'system';
+				document.documentElement.dataset.themeMode = themeMode;
+
+				if (themeMode === 'light' || themeMode === 'dark') {
+					document.documentElement.dataset.theme = themeMode;
+				} else {
+					document.documentElement.removeAttribute('data-theme');
+				}
 			})();
 		</script>
 	</head>
@@ -61,31 +69,63 @@ const {
 		<main class="page-container site-main">
 			<slot />
 		</main>
+		<CodeBlockEnhancer />
 		<script is:inline>
 			const storageKey = 'zlogpro-theme';
 			const root = document.documentElement;
-			const toggle = document.querySelector('[data-theme-toggle]');
+			const themeOptions = Array.from(document.querySelectorAll('[data-theme-option]'));
+			const themeModes = ['light', 'dark', 'system'];
 
-			const setToggleState = (theme) => {
-				if (!toggle) return;
-				const isDark = theme === 'dark';
-				const label = isDark ? '切换到浅色模式' : '切换到暗色模式';
-				toggle.setAttribute('aria-label', label);
-				toggle.setAttribute('title', label);
-				toggle.setAttribute('aria-pressed', String(isDark));
+			const getStoredThemeMode = () => {
+				try {
+					return localStorage.getItem(storageKey);
+				} catch {
+					return null;
+				}
 			};
 
-			setToggleState(root.dataset.theme);
+			const normalizeThemeMode = (mode) => (themeModes.includes(mode) ? mode : 'system');
 
-			toggle?.addEventListener('click', () => {
-				const nextTheme = root.dataset.theme === 'dark' ? 'light' : 'dark';
-				root.dataset.theme = nextTheme;
-				try {
-					localStorage.setItem(storageKey, nextTheme);
-				} catch {
-					// Theme still changes for the current page when storage is unavailable.
+			const setThemeControlsState = (themeMode) => {
+				for (const option of themeOptions) {
+					const isActive = option.dataset.themeOption === themeMode;
+					option.setAttribute('aria-pressed', String(isActive));
 				}
-				setToggleState(nextTheme);
+			};
+
+			const applyThemeMode = (mode, persist = true) => {
+				const themeMode = normalizeThemeMode(mode);
+				root.dataset.themeMode = themeMode;
+
+				if (themeMode === 'light' || themeMode === 'dark') {
+					root.dataset.theme = themeMode;
+				} else {
+					root.removeAttribute('data-theme');
+				}
+
+				if (persist) {
+					try {
+						localStorage.setItem(storageKey, themeMode);
+					} catch {
+						// Theme still changes for the current page when storage is unavailable.
+					}
+				}
+
+				setThemeControlsState(themeMode);
+			};
+
+			applyThemeMode(root.dataset.themeMode ?? getStoredThemeMode(), false);
+
+			for (const option of themeOptions) {
+				option.addEventListener('click', () => {
+					applyThemeMode(option.dataset.themeOption);
+				});
+			}
+
+			window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+				if (root.dataset.themeMode === 'system') {
+					applyThemeMode('system', false);
+				}
 			});
 
 			const restartClassAnimation = (element, className) => {

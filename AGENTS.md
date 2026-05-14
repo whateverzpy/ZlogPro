@@ -19,11 +19,13 @@ Conventions:
 - Put reusable components in `src/components/`.
 - Put layouts in `src/layouts/`.
 - Keep client-side JavaScript minimal.
+- Prefer static rendering over client hydration.
+- Avoid unnecessary React/Vue/Svelte islands.
 - Check official Astro docs before changing `astro.config.mjs`.
 
 Before finishing, run the project’s build command and fix errors.
 
-## Design Guidelines
+## UI & Styling Guidelines
 
 Use a restrained, content-first technical editorial style inspired by modern AI/research documentation interfaces.
 
@@ -42,3 +44,20 @@ Avoid:
 - oversized hero sections
 - excessive animations
 - visually noisy UI
+
+## Component & Icon Rules
+
+- Prefer semantic HTML and accessible markup.
+- Keep components small and reusable.
+- Use Tailwind utility classes directly when reasonable.
+- Avoid deeply nested component abstractions.
+- Use `lucide-astro` for all icons.
+- Keep icon usage minimal and visually consistent.
+
+## Content & Performance
+
+- Optimize for fast static page loads.
+- Prefer local assets when practical.
+- Avoid large client-side dependencies.
+- Keep CSS lightweight and predictable.
+- Preserve good typography and reading width.

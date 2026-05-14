@@ -1,0 +1,135 @@
+---
+import { bundledLanguagesInfo } from 'shiki';
+import { Check, Copy, X } from '@lucide/astro';
+
+const languageNames = Object.fromEntries(
+	bundledLanguagesInfo
+		.flatMap(({ aliases = [], id, name }) => [[id, name], ...aliases.map((alias) => [alias, name])])
+		.concat([
+			['ansi', 'ANSI'],
+			['plain', 'Plain Text'],
+			['text', 'Plain Text'],
+			['txt', 'Plain Text'],
+		])
+		.sort(([left], [right]) => left.localeCompare(right)),
+);
+---
+
+<template id="code-copy-icon">
+	<Copy size={15} stroke-width={1.8} aria-hidden="true" />
+</template>
+<template id="code-copy-success-icon">
+	<Check size={15} stroke-width={1.8} aria-hidden="true" />
+</template>
+<template id="code-copy-error-icon">
+	<X size={15} stroke-width={1.8} aria-hidden="true" />
+</template>
+
+<script define:vars={{ languageNames }}>
+	(() => {
+		const getCodeLanguage = (pre, code) => {
+			const fromDataset = pre.dataset.language;
+			if (fromDataset) return fromDataset;
+
+			const match = Array.from(code.classList).find((className) => className.startsWith('language-'));
+			return match ? match.replace('language-', '') : 'text';
+		};
+
+		const getLanguageName = (language) => {
+			const normalized = language.toLowerCase();
+			return languageNames[normalized] ?? language;
+		};
+
+		const setButtonIcon = (button, iconName) => {
+			const template = document.getElementById(`code-copy-${iconName}-icon`);
+			const fallbackTemplate = document.getElementById('code-copy-icon');
+			const iconTemplate = template instanceof HTMLTemplateElement ? template : fallbackTemplate;
+
+			button.replaceChildren();
+			if (iconTemplate instanceof HTMLTemplateElement) {
+				button.append(iconTemplate.content.cloneNode(true));
+			}
+		};
+
+		const copyText = async (text) => {
+			if (navigator.clipboard?.writeText) {
+				try {
+					await navigator.clipboard.writeText(text);
+					return true;
+				} catch {
+					// Fall through to the textarea fallback for restricted contexts.
+				}
+			}
+
+			const textarea = document.createElement('textarea');
+			textarea.value = text;
+			textarea.setAttribute('readonly', '');
+			textarea.style.position = 'fixed';
+			textarea.style.inset = '0 auto auto -9999px';
+			document.body.appendChild(textarea);
+			textarea.select();
+
+			try {
+				return document.execCommand('copy');
+			} finally {
+				textarea.remove();
+			}
+		};
+
+		const enhanceCodeBlocks = () => {
+			const blocks = document.querySelectorAll('.prose-content pre');
+
+			for (const pre of blocks) {
+				if (pre.closest('.code-block-shell')) continue;
+
+				const code = pre.querySelector('code');
+				if (!code || !pre.parentNode) continue;
+
+				const language = getCodeLanguage(pre, code);
+				const shell = document.createElement('div');
+				shell.className = 'code-block-shell';
+
+				const header = document.createElement('div');
+				header.className = 'code-block-header';
+
+				const label = document.createElement('span');
+				label.className = 'code-block-language';
+				label.textContent = getLanguageName(language);
+
+				const button = document.createElement('button');
+				button.type = 'button';
+				button.className = 'code-copy-button';
+				button.setAttribute('aria-label', `复制 ${language} 代码`);
+				button.setAttribute('title', `复制 ${language} 代码`);
+				setButtonIcon(button, '');
+
+				let resetTimer;
+				button.addEventListener('click', async () => {
+					window.clearTimeout(resetTimer);
+					const copied = await copyText(code.textContent ?? '');
+					button.dataset.state = copied ? 'copied' : 'error';
+					button.setAttribute('aria-label', copied ? '已复制' : '复制失败');
+					button.setAttribute('title', copied ? '已复制' : '复制失败');
+					setButtonIcon(button, copied ? 'success' : 'error');
+
+					resetTimer = window.setTimeout(() => {
+						delete button.dataset.state;
+						button.setAttribute('aria-label', `复制 ${language} 代码`);
+						button.setAttribute('title', `复制 ${language} 代码`);
+						setButtonIcon(button, '');
+					}, 1800);
+				});
+
+				pre.parentNode.insertBefore(shell, pre);
+				header.append(label, button);
+				shell.append(header, pre);
+			}
+		};
+
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', enhanceCodeBlocks, { once: true });
+		} else {
+			enhanceCodeBlocks();
+		}
+	})();
+</script>

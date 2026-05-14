@@ -106,7 +106,7 @@ heroImage: "./hero-test.png"
 ## 表格
 
 | 功能 | Markdown | Astro |
-|---|---:|:---:|
+|:---|:---:|---:|
 | 标题 | 支持 | 支持 |
 | 表格 | GFM 支持 | 支持 |
 | 任务列表 | GFM 支持 | 支持 |
@@ -143,6 +143,12 @@ const post: Post = {
 npm create astro@latest
 npx astro add mdx
 npm run dev
+```
+
+```ansi
+[1;31mERROR[0m
+[1;32mSUCCESS[0m
+[1;33mWARNING[0m
 ```
 
 ---

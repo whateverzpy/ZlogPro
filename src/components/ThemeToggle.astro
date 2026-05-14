@@ -1,14 +1,38 @@
 ---
-import { Moon, Sun } from '@lucide/astro';
+import { Monitor, Moon, Sun } from '@lucide/astro';
 ---
 
-<button
+<div
 	class="theme-toggle"
-	type="button"
-	aria-label="切换到暗色模式"
-	title="切换到暗色模式"
+	role="group"
+	aria-label="颜色模式"
 	data-theme-toggle
 >
-	<Moon class="theme-toggle-icon theme-toggle-icon-moon" size={17} stroke-width={1.8} aria-hidden="true" />
-	<Sun class="theme-toggle-icon theme-toggle-icon-sun" size={17} stroke-width={1.8} aria-hidden="true" />
-</button>
+	<button
+		class="theme-mode-button"
+		type="button"
+		aria-label="浅色模式"
+		title="浅色模式"
+		data-theme-option="light"
+	>
+		<Sun class="theme-toggle-icon" size={15} stroke-width={1.8} aria-hidden="true" />
+	</button>
+	<button
+		class="theme-mode-button"
+		type="button"
+		aria-label="深色模式"
+		title="深色模式"
+		data-theme-option="dark"
+	>
+		<Moon class="theme-toggle-icon" size={15} stroke-width={1.8} aria-hidden="true" />
+	</button>
+	<button
+		class="theme-mode-button"
+		type="button"
+		aria-label="跟随系统"
+		title="跟随系统"
+		data-theme-option="system"
+	>
+		<Monitor class="theme-toggle-icon" size={15} stroke-width={1.8} aria-hidden="true" />
+	</button>
+</div>

@@ -46,7 +46,7 @@
 	}
 
 	.theme-toggle {
-		@apply inline-flex h-9 w-9 items-center justify-center rounded-md border transition-colors;
+		@apply inline-flex h-9 items-center gap-0.5 rounded-md border p-0.5 transition-colors;
 		background: var(--site-surface);
 		border-color: var(--site-border);
 		color: var(--site-text-muted);
@@ -58,16 +58,25 @@
 		color: var(--site-text);
 	}
 
+	.theme-mode-button {
+		@apply inline-flex h-7 w-7 flex-none items-center justify-center rounded-[0.35rem] border border-transparent transition-colors;
+		color: var(--site-text-muted);
+	}
+
+	.theme-mode-button:hover {
+		background: var(--site-muted);
+		color: var(--site-text);
+	}
+
+	:root[data-theme-mode="light"] .theme-mode-button[data-theme-option="light"],
+	:root[data-theme-mode="dark"] .theme-mode-button[data-theme-option="dark"],
+	:root[data-theme-mode="system"] .theme-mode-button[data-theme-option="system"] {
+		background: var(--site-muted);
+		border-color: var(--site-border);
+		color: var(--site-text);
+	}
+
 	.theme-toggle-icon {
-		@apply block;
-	}
-
-	.theme-toggle-icon-sun,
-	:root[data-theme="dark"] .theme-toggle-icon-moon {
-		@apply hidden;
-	}
-
-	:root[data-theme="dark"] .theme-toggle-icon-sun {
 		@apply block;
 	}
 }

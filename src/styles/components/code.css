@@ -26,4 +26,48 @@
 	.not-prose {
 		@apply my-6;
 	}
+
+	.prose-content .code-block-shell {
+		@apply my-5 overflow-hidden rounded-lg border;
+		background: var(--site-pre-bg);
+		border-color: var(--site-border);
+	}
+
+	.prose-content .code-block-header {
+		@apply flex min-h-10 items-center justify-between gap-3 border-b px-3;
+		background: var(--site-muted);
+		border-color: var(--site-border);
+	}
+
+	.prose-content .code-block-language {
+		@apply truncate text-xs font-semibold;
+		color: var(--site-text-soft);
+		font-family: var(--font-mono);
+		letter-spacing: 0.08em;
+	}
+
+	.prose-content .code-copy-button {
+		@apply inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md border transition-colors;
+		background: var(--site-surface);
+		border-color: var(--site-border);
+		color: var(--site-text-muted);
+	}
+
+	.prose-content .code-copy-button:hover {
+		background: var(--site-card-hover);
+		border-color: var(--site-border-strong);
+		color: var(--site-text);
+	}
+
+	.prose-content .code-copy-button[data-state="copied"] {
+		color: var(--site-text);
+	}
+
+	.prose-content .code-copy-button[data-state="error"] {
+		color: var(--site-text-muted);
+	}
+
+	.prose-content .code-block-shell > pre {
+		@apply m-0 rounded-none border-0;
+	}
 }
