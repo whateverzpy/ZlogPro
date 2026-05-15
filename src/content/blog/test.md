@@ -34,7 +34,7 @@ heroImage: "./hero-test.png"
 
 这是第二段。
 
-行尾两个空格可以产生软换行。  
+行尾两个空格可以产生软换行。 
 这是同一段里的下一行。
 
 ---
@@ -140,9 +140,9 @@ const post: Post = {
 ```
 
 ```bash
-npm create astro@latest
-npx astro add mdx
-npm run dev
+pnpm create astro@latest
+pnpm astro add mdx
+pnpm dev
 ```
 
 ```ansi

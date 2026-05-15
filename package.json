@@ -2,6 +2,7 @@
   "name": "zlog-pro",
   "type": "module",
   "version": "0.0.1",
+  "packageManager": "pnpm@11.1.2",
   "engines": {
     "node": ">=22.12.0"
   },
@@ -19,6 +20,7 @@
     "katex": "^0.16.45",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0",
+    "sharp": "^0.34.5",
     "shiki": "^4.0.2",
     "tailwindcss": "^4.3.0"
   },
