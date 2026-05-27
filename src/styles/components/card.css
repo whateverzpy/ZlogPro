@@ -118,9 +118,17 @@
 	}
 
 	.article-nav a {
-		@apply block rounded-lg border p-4 no-underline transition-colors;
+		@apply block w-full rounded-lg border p-4 no-underline transition-colors sm:max-w-[24rem];
 		background: var(--site-surface);
 		border-color: var(--site-border);
+	}
+
+	.article-nav > a:first-child {
+		@apply justify-self-start text-left;
+	}
+
+	.article-nav > a:last-child {
+		@apply justify-self-end text-right;
 	}
 
 	.article-nav a:hover {
