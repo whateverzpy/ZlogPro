@@ -2,9 +2,9 @@
   "name": "zlog-pro",
   "type": "module",
   "version": "0.0.1",
-  "packageManager": "pnpm@11.1.2",
+  "packageManager": "pnpm@11.5.1",
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=22.22.2"
   },
   "scripts": {
     "dev": "astro dev",
