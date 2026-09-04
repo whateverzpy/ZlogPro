@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 
+import { unified } from "@astrojs/markdown-remark";
 import tailwindcss from "@tailwindcss/vite";
 
 import mdx from "@astrojs/mdx";
@@ -10,8 +11,10 @@ import rehypeKatex from "rehype-katex";
 // https://astro.build/config
 export default defineConfig({
   markdown: {
-    remarkPlugins: [remarkMath],
-    rehypePlugins: [rehypeKatex],
+    processor: unified({
+      remarkPlugins: [remarkMath],
+      rehypePlugins: [rehypeKatex],
+    }),
     shikiConfig: {
       themes: {
         light: "github-light",
